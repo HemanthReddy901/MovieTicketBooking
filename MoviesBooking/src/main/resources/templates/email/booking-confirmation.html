@@ -1,0 +1,417 @@
+<!DOCTYPE html>
+<html xmlns:th="http://www.thymeleaf.org" lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Booking Confirmed - Movie Ticket Booking</title>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            line-height: 1.6;
+            color: #333333;
+            background-color: #f4f4f4;
+        }
+        
+        .container {
+            max-width: 600px;
+            margin: 20px auto;
+            background-color: #ffffff;
+            border-radius: 10px;
+            overflow: hidden;
+            box-shadow: 0 4px 6px rgba(0, 0, 0, 0.1);
+        }
+        
+        .header {
+            background: linear-gradient(135deg, #f093fb 0%, #f5576c 100%);
+            color: white;
+            padding: 30px;
+            text-align: center;
+        }
+        
+        .header h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+        
+        .success-badge {
+            display: inline-block;
+            background-color: rgba(255, 255, 255, 0.2);
+            padding: 5px 15px;
+            border-radius: 50px;
+            font-size: 14px;
+            margin-top: 10px;
+        }
+        
+        .content {
+            padding: 30px;
+        }
+        
+        .booking-reference {
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            color: white;
+            padding: 20px;
+            border-radius: 10px;
+            text-align: center;
+            margin-bottom: 30px;
+        }
+        
+        .booking-reference-label {
+            font-size: 12px;
+            opacity: 0.9;
+            margin-bottom: 5px;
+        }
+        
+        .booking-reference-number {
+            font-size: 24px;
+            font-weight: bold;
+            letter-spacing: 1px;
+        }
+        
+        .section {
+            margin-bottom: 25px;
+            border-bottom: 1px solid #eee;
+            padding-bottom: 20px;
+        }
+        
+        .section-title {
+            font-size: 18px;
+            font-weight: 600;
+            color: #667eea;
+            margin-bottom: 15px;
+            display: flex;
+            align-items: center;
+        }
+        
+        .section-title span {
+            margin-right: 10px;
+            font-size: 22px;
+        }
+        
+        .info-row {
+            display: flex;
+            margin-bottom: 12px;
+            padding: 8px;
+            background-color: #f8f9fa;
+            border-radius: 8px;
+        }
+        
+        .info-label {
+            width: 120px;
+            font-weight: 600;
+            color: #555;
+        }
+        
+        .info-value {
+            flex: 1;
+            color: #333;
+        }
+        
+        .movie-details {
+            background: linear-gradient(135deg, #667eea10 0%, #764ba210 100%);
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .seats-container {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .seat-badge {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            padding: 5px 12px;
+            border-radius: 5px;
+            margin: 5px;
+            font-weight: 600;
+            font-size: 14px;
+        }
+        
+        .price-breakdown {
+            background-color: #f8f9fa;
+            padding: 15px;
+            border-radius: 10px;
+            margin: 15px 0;
+        }
+        
+        .price-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 8px 0;
+            border-bottom: 1px dashed #ddd;
+        }
+        
+        .price-row.total {
+            border-top: 2px solid #667eea;
+            border-bottom: none;
+            padding-top: 12px;
+            margin-top: 8px;
+            font-weight: bold;
+            font-size: 18px;
+            color: #667eea;
+        }
+        
+        .qr-code {
+            text-align: center;
+            margin: 20px 0;
+            padding: 20px;
+            background-color: #f8f9fa;
+            border-radius: 10px;
+        }
+        
+        .qr-placeholder {
+            width: 150px;
+            height: 150px;
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            margin: 0 auto;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            color: white;
+            font-size: 12px;
+            border-radius: 10px;
+        }
+        
+        .important-notes {
+            background-color: #fff3cd;
+            border-left: 4px solid #ffc107;
+            padding: 15px;
+            margin: 20px 0;
+            border-radius: 5px;
+        }
+        
+        .button-container {
+            text-align: center;
+            margin: 25px 0;
+        }
+        
+        .download-button {
+            display: inline-block;
+            background-color: #28a745;
+            color: white;
+            text-decoration: none;
+            padding: 12px 30px;
+            border-radius: 50px;
+            font-weight: 600;
+            transition: transform 0.3s ease;
+        }
+        
+        .download-button:hover {
+            transform: translateY(-2px);
+            background-color: #218838;
+        }
+        
+        .footer {
+            background-color: #f8f9fa;
+            padding: 20px;
+            text-align: center;
+            font-size: 12px;
+            color: #999;
+        }
+        
+        .null-value {
+            color: #999;
+            font-style: italic;
+        }
+        
+        @media only screen and (max-width: 480px) {
+            .info-row {
+                flex-direction: column;
+            }
+            
+            .info-label {
+                width: 100%;
+                margin-bottom: 5px;
+            }
+            
+            .booking-reference-number {
+                font-size: 18px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="container">
+        <div class="header">
+            <h1>🎉 Booking Confirmed!</h1>
+            <div class="success-badge">✓ Payment Successful</div>
+        </div>
+        
+        <div class="content">
+            <div class="booking-reference">
+                <div class="booking-reference-label">Your Booking Reference Number</div>
+                <div class="booking-reference-number" th:text="${booking?.bookingReference != null ? booking.bookingReference : 'N/A'}">BK202401201430001</div>
+            </div>
+            
+            <!-- Movie Details Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span>🎬</span> Movie Details
+                </div>
+                <div class="movie-details">
+                    <div class="info-row">
+                        <div class="info-label">Movie Name:</div>
+                        <div class="info-value" th:text="${movie?.title != null ? movie.title : 'N/A'}">Animal</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Language:</div>
+                        <div class="info-value" th:text="${movie?.language != null ? movie.language : 'N/A'}">Hindi</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Duration:</div>
+                        <div class="info-value" th:text="${movie?.duration != null ? movie.duration + ' minutes' : 'N/A'}">210 minutes</div>
+                    </div>
+                    <div class="info-row">
+                        <div class="info-label">Genre:</div>
+                        <div class="info-value" th:text="${movie?.genre != null ? movie.genre : 'N/A'}">Action</div>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Theater Details Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span>🏢</span> Theater Details
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Theater Name:</div>
+                    <div class="info-value" th:text="${theater?.name != null ? theater.name : 'N/A'}">PVR Cinemas</div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Location:</div>
+                    <div class="info-value">
+                        <th:block th:if="${theater != null}">
+                            <th:block th:text="${theater.location != null ? theater.location : ''}"></th:block>
+                            <th:block th:if="${theater.location != null and theater.city != null}">, </th:block>
+                            <th:block th:text="${theater.city != null ? theater.city : ''}"></th:block>
+                        </th:block>
+                        <th:block th:if="${theater == null}">N/A</th:block>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Screen:</div>
+                    <div class="info-value">
+                        <th:block th:if="${show != null and show.screen != null and show.screen.name != null}">
+                            <span th:text="${show.screen.name}">Screen 1</span>
+                        </th:block>
+                        <th:block th:if="${show == null or show.screen == null or show.screen.name == null}">
+                            <span class="null-value">Screen not assigned</span>
+                        </th:block>
+                    </div>
+                </div>
+                <div class="info-row">
+                    <div class="info-label">Show Date & Time:</div>
+                    <div class="info-value">
+                        <th:block th:if="${showTime != null}">
+                            <span th:text="${#temporals.format(showTime, 'dd MMM yyyy, hh:mm a')}">20 Jan 2024, 02:00 PM</span>
+                        </th:block>
+                        <th:block th:if="${showTime == null}">
+                            <span class="null-value">Date not available</span>
+                        </th:block>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Seats Section -->
+            <div class="section">
+                <div class="section-title">
+                    <span>💺</span> Your Seats
+                </div>
+                <div class="seats-container">
+                    <th:block th:if="${seats != null and !seats.isEmpty()}">
+                        <div th:each="seat : ${seats}" class="seat-badge" th:text="${seat?.seatNumber != null ? seat.seatNumber : 'N/A'}">A1</div>
+                    </th:block>
+                    <th:block th:if="${seats == null or seats.isEmpty()}">
+                        <div class="null-value">No seats information available</div>
+                    </th:block>
+                    <div style="margin-top: 10px; font-size: 12px; color: #666;">
+                        Total Seats: <strong th:text="${booking?.numberOfSeats != null ? booking.numberOfSeats : '0'}">3</strong>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- Price Breakdown -->
+            <div class="section">
+                <div class="section-title">
+                    <span>💰</span> Price Details
+                </div>
+                <div class="price-breakdown">
+                    <th:block th:if="${seats != null and !seats.isEmpty()}">
+                        <div th:each="seat : ${seats}" class="price-row">
+                            <span>
+                                Seat <span th:text="${seat?.seatNumber != null ? seat.seatNumber : 'N/A'}">A1</span>
+                                <th:block th:if="${seat?.seatType != null}">
+                                    (<span th:text="${seat.seatType}">Platinum</span>)
+                                </th:block>
+                            </span>
+                            <span>
+                                $<span th:text="${seat?.price != null ? seat.price : '0.00'}">15.00</span>
+                            </span>
+                        </div>
+                    </th:block>
+                    <div class="price-row total">
+                        <span>Total Amount</span>
+                        <span>
+                            $<span th:text="${booking?.totalAmount != null ? booking.totalAmount : '0.00'}">45.00</span>
+                        </span>
+                    </div>
+                </div>
+            </div>
+            
+            <!-- QR Code (Optional) -->
+            <div class="qr-code">
+                <div class="qr-placeholder">
+                    📱 Show this at<br>theater entrance
+                </div>
+                <p style="margin-top: 10px; font-size: 12px; color: #666;">
+                    Show this QR code at the theater counter for entry
+                </p>
+            </div>
+            
+            <!-- Important Notes -->
+            <div class="important-notes">
+                <strong>📌 Important Notes:</strong><br>
+                • Please arrive at the theater at least 15 minutes before the show starts.<br>
+                • Carry a valid ID proof along with this booking confirmation.<br>
+                • Seats are non-transferable and non-refundable after show starts.<br>
+                • Food and drinks from outside are not allowed inside the theater.<br>
+                • For any issues, contact our support team at support@moviebooking.com
+            </div>
+            
+            <!-- Download Button -->
+            <div class="button-container">
+                <a th:href="'http://localhost:8081/api/user/bookings/' + ${booking?.id} + '/receipt'" 
+                   th:if="${booking != null and booking.id != null}"
+                   class="download-button">
+                    📄 Download PDF Receipt
+                </a>
+                <a th:if="${booking == null or booking.id == null}" 
+                   href="#" 
+                   class="download-button" 
+                   style="background-color: #6c757d; cursor: not-allowed;">
+                    📄 Receipt Unavailable
+                </a>
+            </div>
+        </div>
+        
+        <div class="footer">
+            <p>Thank you for choosing Movie Ticket Booking!</p>
+            <p>For any assistance, contact us at support@moviebooking.com or call +91-XXXXXXXXXX</p>
+            <p style="margin-top: 10px;">Follow us on social media for exclusive offers and updates</p>
+            <p style="margin-top: 15px; font-size: 11px;">
+                This is a system generated email. Please do not reply to this message.
+            </p>
+        </div>
+    </div>
+</body>
+</html>
